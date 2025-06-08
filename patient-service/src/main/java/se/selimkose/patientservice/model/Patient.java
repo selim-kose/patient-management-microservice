@@ -30,5 +30,5 @@ public class Patient {
     private LocalDate dateOfBirth;
 
     @NotNull
-    private LocalDate registrationDate;
+    private LocalDate registeredDate;
 }
