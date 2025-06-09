@@ -1,4 +1,5 @@
-package controller;
+package se.selimkose.patientservice.controller;
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
