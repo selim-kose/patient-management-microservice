@@ -1,6 +1,8 @@
 package se.selimkose.patientservice.service;
 
 import org.springframework.stereotype.Service;
+import se.selimkose.patientservice.dto.PatientResponseDTO;
+import se.selimkose.patientservice.mapper.PatientMapper;
 import se.selimkose.patientservice.model.Patient;
 import se.selimkose.patientservice.repository.PatientRepository;
 
@@ -14,9 +16,11 @@ public class PatientService {
         this.patientRepository = patientRepository;
     }
 
-    public List<Patient> getAllPatients() {
-        return patientRepository.findAll();
+    public List<PatientResponseDTO> getAllPatients() {
+        List<Patient> patients = patientRepository.findAll();
+
+        return patients.stream()
+                .map(PatientMapper::toPatientResponseDTO)
+                .toList();
     }
-
-
 }
