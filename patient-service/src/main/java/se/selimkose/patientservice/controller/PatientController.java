@@ -1,10 +1,10 @@
 package se.selimkose.patientservice.controller;
 
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import se.selimkose.patientservice.dto.PatientRequestDTO;
 import se.selimkose.patientservice.dto.PatientResponseDTO;
 import se.selimkose.patientservice.service.PatientService;
 
@@ -20,8 +20,15 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-     @GetMapping
-     public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
-         return ResponseEntity.ok().body(patientService.getAllPatients());
-     }
+    @GetMapping
+    public ResponseEntity<List<PatientResponseDTO>> getAllPatients() {
+        return ResponseEntity.ok().body(patientService.getAllPatients());
+    }
+
+    @PostMapping
+    public ResponseEntity<PatientResponseDTO> createPatient(@Valid @RequestBody PatientRequestDTO patientRequestDTO) {
+        PatientResponseDTO createdPatientResponseDTO = patientService.createPatient(patientRequestDTO);
+
+        return ResponseEntity.ok().body(createdPatientResponseDTO);
+    }
 }
