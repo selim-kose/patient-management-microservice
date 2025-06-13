@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+// This file defines the BillingService gRPC service and its messages.
+
+// Split the service definition into a separate file for clarity
+option java_multiple_files = true;
+
+
+option java_package = "billing";
+
+service BillingService {
+    // Create a new invoice
+   rpc CreateBillingAccount (BillingRequest) returns (BillingResponse);
+}
+
+message BillingRequest {
+    string patientId = 1; // Unique identifier for the billing account
+    string name = 2; // Name of the customer
+    string email = 3; // Email address of the customer
+}
+
+message BillingResponse {
+    string billingAccountId = 1; // Unique identifier for the created billing account
+    string status = 2; // Status of the billing account creation
+}
