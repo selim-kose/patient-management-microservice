@@ -5,6 +5,7 @@ import se.selimkose.patientservice.dto.PatientRequestDTO;
 import se.selimkose.patientservice.dto.PatientResponseDTO;
 import se.selimkose.patientservice.exception.EmailAlreadyExistsException;
 import se.selimkose.patientservice.exception.PatientNotFoundException;
+import se.selimkose.patientservice.grpc.BillingServiceGrpcClient;
 import se.selimkose.patientservice.mapper.PatientMapper;
 import se.selimkose.patientservice.model.Patient;
 import se.selimkose.patientservice.repository.PatientRepository;
@@ -16,9 +17,12 @@ import java.util.UUID;
 @Service
 public class PatientService {
     private final PatientRepository patientRepository;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
 
-    public PatientService(PatientRepository patientRepository) {
+    public PatientService(PatientRepository patientRepository,
+                          BillingServiceGrpcClient billingServiceGrpcClient) {
         this.patientRepository = patientRepository;
+        this.billingServiceGrpcClient = billingServiceGrpcClient;
     }
 
     public List<PatientResponseDTO> getAllPatients() {
@@ -37,6 +41,13 @@ public class PatientService {
         }
 
         Patient savedPatient = patientRepository.save(PatientMapper.toPatient(patientRequestDTO));
+
+        // Create a billing account for the patient using gRPC client after saving the patient to the database
+        billingServiceGrpcClient.createBillingAccount(
+                savedPatient.getId().toString(),
+                savedPatient.getName(),
+                savedPatient.getEmail()
+        );
 
         return PatientMapper.toPatientResponseDTO(savedPatient);
     }
