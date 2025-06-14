@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+//TODO Centralize the proto file and remove duplicates
 // This file defines the BillingService gRPC service and its messages.
 
 // Split the service definition into a separate file for clarity
