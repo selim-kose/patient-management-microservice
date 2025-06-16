@@ -6,6 +6,7 @@ import se.selimkose.patientservice.dto.PatientResponseDTO;
 import se.selimkose.patientservice.exception.EmailAlreadyExistsException;
 import se.selimkose.patientservice.exception.PatientNotFoundException;
 import se.selimkose.patientservice.grpc.BillingServiceGrpcClient;
+import se.selimkose.patientservice.kafka.KafkaProducer;
 import se.selimkose.patientservice.mapper.PatientMapper;
 import se.selimkose.patientservice.model.Patient;
 import se.selimkose.patientservice.repository.PatientRepository;
@@ -18,11 +19,13 @@ import java.util.UUID;
 public class PatientService {
     private final PatientRepository patientRepository;
     private final BillingServiceGrpcClient billingServiceGrpcClient;
+    private final KafkaProducer kafkaProducer;
 
     public PatientService(PatientRepository patientRepository,
-                          BillingServiceGrpcClient billingServiceGrpcClient) {
+                          BillingServiceGrpcClient billingServiceGrpcClient, KafkaProducer kafkaProducer) {
         this.patientRepository = patientRepository;
         this.billingServiceGrpcClient = billingServiceGrpcClient;
+        this.kafkaProducer = kafkaProducer;
     }
 
     public List<PatientResponseDTO> getAllPatients() {
@@ -48,6 +51,9 @@ public class PatientService {
                 savedPatient.getName(),
                 savedPatient.getEmail()
         );
+
+        // Send a Kafka event after creating the patient and billing account
+        kafkaProducer.sendEvent(savedPatient);
 
         return PatientMapper.toPatientResponseDTO(savedPatient);
     }
