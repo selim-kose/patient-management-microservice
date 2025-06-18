@@ -1,5 +1,6 @@
 package se.selimkose.authservice.service;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.selimkose.authservice.dto.LoginRequestDTO;
@@ -26,5 +27,15 @@ public class AuthService {
                 .map(user -> jwtUtil.generateToken(user.getEmail(), user.getRole()));
 
         return token;
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            jwtUtil.validateToken(token);
+            return true;
+
+        } catch (JwtException e) {
+            return false;
+        }
     }
 }
