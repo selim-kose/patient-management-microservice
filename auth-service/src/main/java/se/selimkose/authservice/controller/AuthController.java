@@ -8,11 +8,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import se.selimkose.authservice.dto.LoginRequestDTO;
 import se.selimkose.authservice.dto.LoginResponseDTO;
+import se.selimkose.authservice.service.AuthService;
 
 import java.util.Optional;
 
 @RestController
 public class AuthController {
+
+    private final AuthService authService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @Operation(summary = "Generate token on user login")
     @PostMapping("/login")
