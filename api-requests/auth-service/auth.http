@@ -8,5 +8,6 @@ Content-Type: application/json
   "password": "password123"
 }
 
-### Saves the given token from the response to the client global variable
+
 > {% client.global.set("token", response.body.token) %}
+### Saves the given token from the response to the client global variable
