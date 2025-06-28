@@ -1,0 +1,30 @@
+### GET request to retrieve a list of patients
+GET http://lb-76c2abb2.elb.localhost.localstack.cloud:4004/api/patients
+Authorization: Bearer {{token}}
+
+### POST request to create a new patient
+POST http://lb-76c2abb2.elb.localhost.localstack.cloud:4004/api/patients
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Test Testsson",
+  "email": "test.kafka21@mail.com",
+  "address": "Testgatan 1",
+  "dateOfBirth": "1990-01-01",
+  "registeredDate": "2025-06-01"
+}
+
+### PUT request to update an existing patient
+PUT http://lb-37b3086b.elb.localhost.localstack.cloud:4000/patients/123e4567-e89b-12d3-a456-426614174000
+Content-Type: application/json
+
+{
+  "name": "Test Testsson",
+  "email": "test4@mail.com",
+  "address": "Testgatan 1",
+  "dateOfBirth": "1990-01-01"
+}
+
+### DELETE request to remove a patient
+DELETE http://lb-37b3086b.elb.localhost.localstack.cloud:4000/patients/123e4567-e89b-12d3-a456-426614174000

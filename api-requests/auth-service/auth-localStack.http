@@ -1,0 +1,12 @@
+### Login Request to retrieve JWT token, using LocalStack
+POST http://lb-76c2abb2.elb.localhost.localstack.cloud:4004/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@test.com",
+  "password": "password123"
+}
+
+
+> {% client.global.set("token", response.body.token) %}
+### Saves the given token from the response to the client global variable
