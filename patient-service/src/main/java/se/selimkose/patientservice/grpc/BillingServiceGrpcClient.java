@@ -19,8 +19,8 @@ public class BillingServiceGrpcClient {
 
 
     public BillingServiceGrpcClient(
-            @Value("${grpc.billing.service.server.address}") String billingServiceServerAddress,
-            @Value("${grpc.billing.service.server.port}") int billingServiceServerPort
+            @Value("${billing.service.address:localhost}") String billingServiceServerAddress,
+            @Value("${billing.service.grpc.port:9001}") int billingServiceServerPort
     ) {
         log.info("Connecting to Billing Service at server address: {}:{}",
                 billingServiceServerAddress, billingServiceServerPort);

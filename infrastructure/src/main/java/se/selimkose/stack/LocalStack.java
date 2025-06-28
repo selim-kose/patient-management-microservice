@@ -100,15 +100,16 @@ public class LocalStack extends Stack {
     }
 
     private DatabaseInstance createDatabaseInstance(String id, String dbName) {
-        return DatabaseInstance.Builder.create(this, id)
-                .instanceType(InstanceType.of(InstanceClass.BURSTABLE2, InstanceSize.MICRO)) // Use a micro instance type for local development
-                .vpc(this.vpc) // Use the VPC created earlier
+        return DatabaseInstance.Builder
+                .create(this, id)
                 .engine(DatabaseInstanceEngine.postgres(
                         PostgresInstanceEngineProps.builder()
                                 .version(PostgresEngineVersion.VER_17_2)
                                 .build()))
+                .instanceType(InstanceType.of(InstanceClass.BURSTABLE2, InstanceSize.MICRO)) // Use a micro instance type for local development
+                .vpc(this.vpc) // Use the VPC created earlier
                 .allocatedStorage(20)
-                .credentials(Credentials.fromGeneratedSecret("user")) // Use a generated secret for the database credentials
+                .credentials(Credentials.fromGeneratedSecret("admin_user")) // Use a generated secret for the database credentials
                 .databaseName(dbName)
                 .removalPolicy(RemovalPolicy.DESTROY)   // Destroy the database on stack deletion
                 .build();
@@ -143,7 +144,7 @@ public class LocalStack extends Stack {
         return CfnCluster.Builder.create(this, "MSKCluster")
                 .clusterName("patient-management-kafka-cluster")
                 .kafkaVersion("2.8.0") // Specify the Kafka version
-                .numberOfBrokerNodes(1) // Use 3 broker nodes for redundancy
+                .numberOfBrokerNodes(2) // Use 3 broker nodes for redundancy
                 .brokerNodeGroupInfo(CfnCluster.BrokerNodeGroupInfoProperty.builder()
                         .instanceType("kafka.m5.large") // Use a suitable instance type for brokers
                         .clientSubnets(this.vpc.getPrivateSubnets().stream()
@@ -207,7 +208,7 @@ public class LocalStack extends Stack {
                     db.getDbInstanceEndpointPort(),
                     imageName
             ));
-            envVars.put("SPRING_DATASOURCE_USERNAME", "admin");
+            envVars.put("SPRING_DATASOURCE_USERNAME", "admin_user");
             envVars.put("SPRING_DATASOURCE_PASSWORD",
                     db.getSecret().secretValueFromJson("password").toString());
             envVars.put("SPRING_JPA_HIBERNATE_DDL_AUTO", "update");
